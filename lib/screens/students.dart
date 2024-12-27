@@ -9,11 +9,11 @@ class StudentsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Widget mainContent = const Center(
-      child: Text("No students found. Start adding some!"),
+      child: CircularProgressIndicator(),
     );
 
     var students = ref.watch(studentsProvider);
-    if (students.isNotEmpty) {
+    if (students != null) {
       mainContent = StudentsList(students: students);
     }
 

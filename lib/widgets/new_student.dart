@@ -31,7 +31,7 @@ class _NewStudentState extends ConsumerState<NewStudent> {
     _selectedDepartment = ref.read(departmentsProvider).first;
 
     if (widget.studentIndex != null) {
-      final student = ref.read(studentsProvider)[widget.studentIndex!];
+      final student = ref.read(studentsProvider)![widget.studentIndex!];
 
       _firstNameController.text = student.firstName;
       _lastNameController.text = student.lastName;
@@ -52,7 +52,7 @@ class _NewStudentState extends ConsumerState<NewStudent> {
     super.dispose();
   }
 
-  void _submitStudent() {
+  void _submitStudent() async {
     final inputGrade = int.tryParse(_gradeController.text);
     final gradeIsInvalid = inputGrade == null || inputGrade <= 0;
     final firstNameIsInvalid = _firstNameController.text.trim().isEmpty;
@@ -79,26 +79,27 @@ class _NewStudentState extends ConsumerState<NewStudent> {
     }
 
     if (widget.studentIndex != null) {
-      ref.read(studentsProvider.notifier).editStudent(
-          Student(
-            firstName: _firstNameController.text.trim(),
-            lastName: _lastNameController.text.trim(),
-            departmentId: _selectedDepartment.id,
-            gender: _selectedGender,
-            grade: inputGrade,
-          ),
-          widget.studentIndex!);
+      await ref.read(studentsProvider.notifier).editStudent(
+            widget.studentIndex!,
+            _firstNameController.text.trim(),
+            _lastNameController.text.trim(),
+            _selectedDepartment.id,
+            _selectedGender,
+            inputGrade,
+          );
     } else {
-      ref.read(studentsProvider.notifier).addStudent(
-            Student(
-                firstName: _firstNameController.text.trim(),
-                lastName: _lastNameController.text.trim(),
-                departmentId: _selectedDepartment.id,
-                gender: _selectedGender,
-                grade: inputGrade),
+      await ref.read(studentsProvider.notifier).addStudent(
+            _firstNameController.text.trim(),
+            _lastNameController.text.trim(),
+            _selectedDepartment.id,
+            _selectedGender,
+            inputGrade,
           );
     }
-    Navigator.pop(context);
+
+    if (mounted && context.mounted) {
+      Navigator.of(context).pop();
+    }
   }
 
   @override

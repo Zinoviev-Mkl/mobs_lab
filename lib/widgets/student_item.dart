@@ -12,7 +12,7 @@ class StudentItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final department = ref
         .watch(departmentsProvider)
-        .firstWhere((d) => d.id == student.departmentId);
+        .firstWhere((dept) => dept.id == student.departmentId);
 
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;

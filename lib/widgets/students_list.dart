@@ -26,18 +26,27 @@ class StudentsList extends ConsumerWidget {
         onDismissed: (direction) {
           final studentToDelete = students[index];
           final notifier = ref.read(studentsProvider.notifier);
-          notifier.removeStudent(studentToDelete);
+          notifier.removeStudentLocal(studentToDelete);
           ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              duration: const Duration(seconds: 3),
-              content: const Text('Student deleted'),
-              action: SnackBarAction(
-                  label: 'Undo',
-                  onPressed: () {
-                    notifier.insertStudent(studentToDelete, index);
-                  }),
-            ),
+          ScaffoldMessenger.of(context)
+              .showSnackBar(
+                SnackBar(
+                  duration: const Duration(seconds: 3),
+                  content: const Text('Student deleted'),
+                  action: SnackBarAction(
+                      label: 'Undo',
+                      onPressed: () {
+                        notifier.insertStudentLocal(studentToDelete, index);
+                      }),
+                ),
+              )
+              .closed
+              .then(
+            (value) {
+              if (value != SnackBarClosedReason.action) {
+                notifier.removeStudent(studentToDelete);
+              }
+            },
           );
         },
         child: InkWell(

@@ -19,10 +19,10 @@ class DepartmentsScreen extends ConsumerWidget {
           mainAxisSpacing: 8,
         ),
         children: [
-          for(final en in departments)
-            DepartmentItem(department: en,)
-        ]
-      );
-    // );
+          for (final dept in departments)
+            DepartmentItem(
+              department: dept,
+            )
+        ]);
   }
 }
